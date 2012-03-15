@@ -13,17 +13,31 @@
   <canvas id="cloud" width="320" height="240"></canvas>
   <script>
     var canvas = Canvas.get("cloud");
-    var cloud  = Cloud.create( [ {x:135, y: 95, color:"red", size:6}, // 0
-                                 {x:185, y: 95, color:"red", size:6}, // 1
-                                 {x:185, y:145, color:"red", size:6}, // 2
-                                 {x:135, y:145, color:"red", size:6}, // 3
+    var cloud  = Cloud.create( [ {x: 0, y: 0, z: 0, color:"red", size:6}, // 0
+                                 {x:50, y: 0, z: 0, color:"red", size:6}, // 1
+                                 {x:50, y:50, z: 0, color:"red", size:6}, // 2
+                                 {x: 0, y:50, z: 0, color:"red", size:6}, // 3
+                                 {x: 0, y: 0, z:50, color:"red", size:6}, // 4
+                                 {x:50, y: 0, z:50, color:"red", size:6}, // 5
+                                 {x:50, y:50, z:50, color:"red", size:6}, // 6
+                                 {x: 0, y:50, z:50, color:"red", size:6}  // 7
                                ] );
     var shape = Shape.create( cloud, 
                               [ { begin:0, end:1, color:"blue", size:2 },
                                 { begin:1, end:2, color:"blue", size:2 },
                                 { begin:2, end:3, color:"blue", size:2 },
-                                { begin:3, end:0, color:"blue", size:2 }
+                                { begin:3, end:0, color:"blue", size:2 },
+                                { begin:4, end:5, color:"blue", size:2 },
+                                { begin:5, end:6, color:"blue", size:2 },
+                                { begin:6, end:7, color:"blue", size:2 },
+                                { begin:7, end:4, color:"blue", size:2 },
+                                { begin:0, end:4, color:"blue", size:2 },
+                                { begin:1, end:5, color:"blue", size:2 },
+                                { begin:2, end:6, color:"blue", size:2 },
+                                { begin:3, end:7, color:"blue", size:2 }
                               ] );
+    cloud.addTranslation( {x:135, y:95, z:20} );
+    
     canvas.render(shape);
     canvas.render(cloud);
   </script>
