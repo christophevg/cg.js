@@ -11,7 +11,7 @@
 
     cloud2d.getModel = function getModel() {
       var p = -1,
-          v = 0;
+          v = -1;
       return {
         resetPoints  : function resetPoints() { 
           p = -1;
@@ -26,18 +26,20 @@
                    size: points[p].size, color: points[p].color };
         },
         resetVertices : function resetVertices() {
-          v = 0;
+          v = -1;
         },
         hasNextVertex : function hasNextVertex() {
           return v+1 < points.length;
         },
         getNextVertex : function getNextVertex() {
           v++;
+          var begin_idx = v,
+              end_idx   = v+1 < points.length ? v+1 : 0;
           // TODO: add some config about vertices for size and color
-          return { begin : {x: points[v-1].x, y:points[v-1].y},
-                   end   : {x: points[v].x,   y:points[v].y},
+          return { begin : {x: points[begin_idx].x, y:points[begin_idx].y},
+                   end   : {x: points[end_idx].x,   y:points[end_idx].y  },
                    size  : 1,
-                   color : points[v-1].color };
+                   color : points[begin_idx].color };
         }
       }
     }
