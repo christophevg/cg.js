@@ -1,0 +1,11 @@
+CG - some experiments in Computer Graphics
+Christophe VG <contact+cg@christophe.vg>
+
+---
+
+Goals:
+- reusable Model-based rendering "framework" for the Canvas element.
+- 3D
+- Bezier- & Spline-surfaces
+- interactive modeling
+- ...
