@@ -38,10 +38,16 @@
 
     canvas = {};
 
-    canvas.renderPoints = function renderPoints(model) {
-      model.resetPoints();
-      while(model.hasNextPoint()) {
-        renderPoint(model.getNextPoint());
+    canvas.render = function render(model) {
+      model.reset();
+      while(model.hasNext()) {
+        var item = model.getNext();
+        switch(model.type) {
+          case "point" : renderPoint(item);  break;
+          case "vertex": renderVertex(item); break;
+          default:
+            console.log( "unknown rendering type: " + mode.type );
+        }
       }
     }
     
