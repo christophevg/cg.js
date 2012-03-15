@@ -1,4 +1,4 @@
-// the cloud.2d module
+// the cloud. module
 (function(globals) {
 
   // provides an instantiateable canvas
@@ -7,9 +7,9 @@
     // privates
     var
 
-    cloud2d = {};
+    cloud = {};
 
-    cloud2d.getModel = function getModel() {
+    cloud.getModel = function getModel() {
       var p = -1,
           v = -1;
       return {
@@ -44,11 +44,11 @@
       }
     }
     
-    return cloud2d;
+    return cloud;
   }
 
-  var Cloud2D = globals.Cloud2D = {};
+  var Cloud = globals.Cloud = {};
   
-  Cloud2D.create = function create(p) { return construct(p); }
+  Cloud.create = function create(p) { return construct(p); }
   
 })(window);
