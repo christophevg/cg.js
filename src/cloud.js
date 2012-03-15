@@ -21,7 +21,9 @@
       cloud.addTransformation( function(point) {
         return { x: point.x + translation.x,
                  y: point.y + translation.y,
-                 z: point.z + translation.z };
+                 z: point.z + translation.z,
+                 color: point.color,
+                 size : point.size };
       } );
     },
 
