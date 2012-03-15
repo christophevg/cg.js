@@ -29,11 +29,13 @@
     renderVertex = function renderVertex(vertex) {
       convertPoint(vertex.begin);
       convertPoint(vertex.end);
+      context.beginPath();
       context.strokeStyle = vertex.color;
       context.lineWidth   = vertex.size;
       context.moveTo(vertex.begin.x, vertex.begin.y);
       context.lineTo(vertex.end.x, vertex.end.y);
       context.stroke();
+      context.closePath();
     },
 
     canvas = {};
