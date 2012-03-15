@@ -6,15 +6,23 @@
 
     // privates
     var p = -1, // internal counter for iterator
-        translations = [],
+        transformations = [],
         
     // exposed object
     cloud = {};
 
     cloud.type = "point";
 
+    cloud.addTransformation = function addTransformation(transformation) {
+      transformations.push(transformation);
+    }
+
     cloud.addTranslation = function addTranslation(translation) {
-      translations.push(translation);
+      cloud.addTransformation( function(point) {
+        return { x: point.x + translation.x,
+                 y: point.y + translation.y,
+                 z: point.z + translation.z };
+      } );
     },
 
     cloud.reset = function reset() { 
@@ -29,10 +37,8 @@
       if(idx >= points.length) { return; }
       var point = { x: points[idx].x, y: points[idx].y, z: points[idx].z,
                     size: points[idx].size, color: points[idx].color };
-      for(var t in translations) {
-        point.x += translations[t].x;
-        point.y += translations[t].y;
-        point.z += translations[t].z;
+      for(var t in transformations) {
+        point = transformations[t](point);
       }
       return point;
     }
