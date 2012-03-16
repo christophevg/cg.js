@@ -13,12 +13,12 @@
 
     cloud.type = "point";
 
-    cloud.addTransformation = function addTransformation(transformation) {
+    cloud.applyTransformation = function applyTransformation(transformation) {
       transformations.push(transformation);
     }
 
-    cloud.addTranslation = function addTranslation(translation) {
-      cloud.addTransformation( function(point) {
+    cloud.applyTranslation = function applyTranslation(translation) {
+      cloud.applyTransformation( function(point) {
         return { x: point.x + translation.x,
                  y: point.y + translation.y,
                  z: point.z + translation.z,

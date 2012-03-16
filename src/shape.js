@@ -15,6 +15,14 @@
     shape.size = function size() {
       return vertices.length;
     }
+
+    shape.applyTransformation = function applyTransformation(transformation) {
+      cloud.applyTransformation(transformation);
+    }
+
+    shape.applyTranslation = function applyTranslation(translation) {
+      cloud.applyTranslation(translation);
+    },
     
     shape.get = function get(idx) {
       if(idx >= vertices.length) { return; }

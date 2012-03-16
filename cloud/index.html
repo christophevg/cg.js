@@ -2,48 +2,33 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>POC web client</title>
+  <title>cg.js</title>
   <link rel="stylesheet" type="text/css" href="../common/cg.css">
   <script src="../src/canvas.js"></script>
   <script src="../src/cloud.js"></script>
   <script src="../src/perspective.js"></script>
   <script src="../src/shape.js"></script>
+  <script src="../src/shapes.js"></script>
 </head>
 
 <body>
   <canvas id="cloud" width="640" height="480"></canvas>
   <script>
-    var canvas = Canvas.get("cloud");
+    var canvas = Canvas.get("cloud"),
+        x_axis = Shapes.line( {x:-200,y:0,z:0}, {x:200,y:0,z:0}, "grey", 2 ),
+        y_axis = Shapes.line( {x:0,y:-200,z:0}, {x:0,y:200,z:0}, "grey", 2 ),
+        z_axis = Shapes.line( {x:0,y:0,z:-200}, {x:0,y:0,z:200}, "grey", 2 ),
+        cube   = Shapes.cube( 50, "blue", 2 )
 
-    var cloud  = Cloud.create( [ {x:-25, y:-70, z:25, color:"red",  size:6}, // 0
-                                 {x: 25, y:-70, z:25, color:"red",  size:6}, // 1
-                                 {x: 25, y:-20, z:25, color:"red",  size:6}, // 2
-                                 {x:-25, y:-20, z:25, color:"red",  size:6}, // 3
-                                 {x:-25, y:-70, z:75, color:"grey", size:1}, // 4
-                                 {x: 25, y:-70, z:75, color:"grey", size:1}, // 5
-                                 {x: 25, y:-20, z:75, color:"red",  size:6}, // 6
-                                 {x:-25, y:-20, z:75, color:"red",  size:6}  // 7
-                               ] );
+    cube.applyTranslation( {x:-25, y:-25, z:-25} );
 
-    var shape = Shape.create( cloud, 
-                              [ { begin:0, end:1, color:"blue", size:2 },
-                                { begin:1, end:2, color:"blue", size:2 },
-                                { begin:2, end:3, color:"blue", size:2 },
-                                { begin:3, end:0, color:"blue", size:2 },
-                                { begin:4, end:5, color:"grey", size:1 },
-                                { begin:5, end:6, color:"grey", size:1 },
-                                { begin:6, end:7, color:"blue", size:2 },
-                                { begin:7, end:4, color:"grey", size:1 },
-                                { begin:0, end:4, color:"grey", size:1 },
-                                { begin:1, end:5, color:"grey", size:1 },
-                                { begin:2, end:6, color:"blue", size:2 },
-                                { begin:3, end:7, color:"blue", size:2 }
-                              ] );
+    //canvas.setPerspective( Perspective.projection(50) );
 
-    canvas.setPerspective( Perspective.projection(50) );
-
-    canvas.render(shape);
-    canvas.render(cloud);
+    canvas.render(x_axis);
+    canvas.render(y_axis);
+    canvas.render(z_axis);
+    
+    canvas.render(cube);
   </script>
 </body>
 </html>
