@@ -3,6 +3,7 @@
 
   // provides an instantiateable canvas
   function construct(cloud, vertices) {
+    vertices = vertices || [];
 
     // privates
     var v = -1, // internal counter for iterator
@@ -14,6 +15,10 @@
 
     shape.size = function size() {
       return vertices.length;
+    }
+    
+    shape.add = function add(vertex) {
+      vertices.push(vertex);
     }
 
     shape.applyTransformation = function applyTransformation(transformation) {

@@ -17,13 +17,17 @@
   <canvas id="cloud" width="640" height="480"></canvas>
   <script>
     var canvas = Canvas.get("cloud"),
-        x_axis = Shapes.line( {x:-200,y:0,z:0}, {x:200,y:0,z:0}, "grey", 2 ),
-        y_axis = Shapes.line( {x:0,y:-200,z:0}, {x:0,y:200,z:0}, "grey", 2 ),
-        z_axis = Shapes.line( {x:0,y:0,z:-200}, {x:0,y:0,z:200}, "grey", 2 ),
-        cube   = Shapes.cube( 50, "blue", 2 )
+        x_axis = Shapes.line( {x:-200,y:0,z:0}, {x:200,y:0,z:0}, "grey", 1 ),
+        y_axis = Shapes.line( {x:0,y:-200,z:0}, {x:0,y:200,z:0}, "grey", 1 ),
+        z_axis = Shapes.line( {x:0,y:0,z:-200}, {x:0,y:0,z:200}, "grey", 1 ),
+        cube   = Shapes.cube( 50, "blue", 2 ),
+        plane  = Shapes.plane( 200, 200, 4, 4, "red", 1 );
 
-    cube.applyTranslation( {x:-25, y:-25, z:-25} );
+    cube.applyTranslation( {x:-25, y:0, z:-25} );
     cube.applyRotation( {x:45, y:45, z:45} );
+
+    plane.applyTranslation( {x:-100, y:0, z:-100} );
+    plane.applyRotation( {x:45, y:45, z:45} );
 
     // TODO: Projection Perspective needs to be fixed a bit ;-)
     // canvas.setPerspective( Perspective.projection(20) );
@@ -33,6 +37,7 @@
     canvas.render(z_axis);
     
     canvas.render(cube);
+    canvas.render(plane);
   </script>
 </body>
 </html>

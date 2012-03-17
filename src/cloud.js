@@ -3,6 +3,7 @@
 
   // provides an instantiateable canvas
   function construct(points) {
+    points = points || [];
 
     // privates
     var p = -1, // internal counter for iterator
@@ -12,6 +13,10 @@
     cloud = {};
 
     cloud.type = "point";
+    
+    cloud.add = function add(point) {
+      points.push(point);
+    }
 
     cloud.applyTransformation = function applyTransformation(transformation) {
       transformations.push(transformation);
