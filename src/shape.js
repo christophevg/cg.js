@@ -23,6 +23,10 @@
     shape.applyTranslation = function applyTranslation(translation) {
       cloud.applyTranslation(translation);
     },
+
+    shape.applyRotation = function applyRotation(rotation) {
+      cloud.applyRotation(rotation);
+    },
     
     shape.get = function get(idx) {
       if(idx >= vertices.length) { return; }

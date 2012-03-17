@@ -4,11 +4,13 @@
   <meta charset="utf-8">
   <title>cg.js</title>
   <link rel="stylesheet" type="text/css" href="../common/cg.css">
+  <script src="../src/matrix.js"></script>
   <script src="../src/canvas.js"></script>
   <script src="../src/cloud.js"></script>
   <script src="../src/perspective.js"></script>
   <script src="../src/shape.js"></script>
   <script src="../src/shapes.js"></script>
+  <script src="../src/transformations.js"></script>
 </head>
 
 <body>
@@ -21,8 +23,10 @@
         cube   = Shapes.cube( 50, "blue", 2 )
 
     cube.applyTranslation( {x:-25, y:-25, z:-25} );
+    cube.applyRotation( {x:45, y:45, z:45} );
 
-    //canvas.setPerspective( Perspective.projection(50) );
+    // TODO: Projection Perspective needs to be fixed a bit ;-)
+    // canvas.setPerspective( Perspective.projection(20) );
 
     canvas.render(x_axis);
     canvas.render(y_axis);

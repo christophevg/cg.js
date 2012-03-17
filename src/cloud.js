@@ -27,6 +27,22 @@
       } );
     },
 
+    cloud.applyRotation = function applyRotation(rotation) {
+      cloud.applyTransformation( function(point) {
+        
+        var result = 
+        Transformations.rotateDegs(rotation)
+          .x(Matrix.create( [ [ point.x, point.y, point.z ] ] )
+              .transpose());
+
+        return { x: result.getRows()[0][0],
+                 y: result.getRows()[1][0],
+                 z: result.getRows()[2][0],
+                 color: point.color,
+                 size : point.size };
+      } );
+    },
+
     cloud.reset = function reset() { 
       p = -1;
     }

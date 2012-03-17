@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>transformations model test page</title>
+  <link rel="stylesheet" type="text/css" href="../common/cg.css">
+  <script src="test.js"></script>
+  <script src="../src/matrix.js"></script>
+  <script src="../src/transformations.js"></script>
+</head>
+
+<body>
+  <h1>transformations Module Tests</h1>
+  <script>
+    var tx = Transformations.rotateXdeg(35);
+    var m1 = Matrix.create( [ [-25],[-25],[-25] ] );
+    var p1 = Matrix.create( [ [-25], [-6.139390198448641], [-34.81821201600094] ] );
+    Test.assertEquals(tx.x(m1), p1, "35 deg X-axis rotation failed" );
+    
+    var pxyz = 
+    Transformations.rotateZdeg(45)
+      .x(Transformations.rotateYdeg(45)
+        .x(Transformations.rotateXdeg(45)
+          .x(Matrix.create( [ [-25], [-25], [-25] ] ))));
+    var txyz = Transformations.rotateDegs({x:45,y:45,z:45});
+    Test.assertEquals(txyz.x(m1), pxyz, "XYZ rotations failed" );
+
+  </script>
+</body>
+</html>
