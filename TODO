@@ -1,3 +1,4 @@
 Things I need to do, but are not really critical right now ;-)
 
 - implement support for rendering "crisp" lines
+- implement everything with arrays, hashes are rather expensive

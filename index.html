@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>cg.js</title>
+  <link rel="stylesheet" type="text/css" href="common/cg.css">
+  <script src="src/matrix.js"></script>
+  <script src="src/canvas.js"></script>
+  <script src="src/cloud.js"></script>
+  <script src="src/perspective.js"></script>
+  <script src="src/shape.js"></script>
+  <script src="src/transformations.js"></script>
+  <script src="src/shapes.js"></script>
+  <script src="src/plane.js"></script>
+  <script src="src/bezier.js"></script>
+</head>
+
+<body>
+  <canvas id="cloud" width="640" height="480"></canvas>
+  <script>
+    var start  = new Date().getTime(),
+        canvas = Canvas.get("cloud"),
+        x_axis = Shapes.line( {x:-200,y:0,z:0}, {x:200,y:0,z:0}, "grey", 1 ),
+        y_axis = Shapes.line( {x:0,y:-200,z:0}, {x:0,y:200,z:0}, "grey", 1 ),
+        z_axis = Shapes.line( {x:0,y:0,z:-200}, {x:0,y:0,z:200}, "grey", 1 ),
+        cube   = Shapes.cube( 50, "blue", 2 ),
+        plane  = Shapes.plane( 200, 200, 4, 4, "red", 1 ),
+        bezier = Shapes.Bezier.curve( [ { x:-50, y:  0, z:0 },
+                                        { x: 10, y: 30, z:0 },
+                                        { x:100, y: 200, z:0 },
+                                        { x:200, y:-25, z:0 } ],
+                                        10, "green", 1 );
+    
+
+    cube.applyTranslation( {x:-25, y:0, z:-25} );
+    cube.applyRotation( {x:45, y:45, z:45} );
+
+    plane.applyTranslation( {x:-100, y:0, z:-100} );
+    plane.applyRotation( {x:45, y:45, z:45} );
+
+    bezier.applyTranslation( {x:-100, y:100, z:-100} );
+    // bezier.applyRotation( {x:45, y:45, z:45} );
+
+    // TODO: Projection Perspective needs to be fixed a bit ;-)
+    // canvas.setPerspective( Perspective.projection(20) );
+
+    canvas.render(x_axis);
+    canvas.render(y_axis);
+    canvas.render(z_axis);
+    
+    canvas.render(cube);
+    canvas.render(plane);
+    canvas.render(bezier);
+    
+    console.log((new Date().getTime() - start)/1000);
+  </script>
+</body>
+</html>
