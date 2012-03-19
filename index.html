@@ -61,6 +61,9 @@
     // TODO: Projection Perspective needs to be fixed a bit ;-)
     // canvas.setPerspective( Perspective.projection(20) );
 
+    console.log("preparation: " + (new Date().getTime() - start)/1000 + "s");
+    start = new Date().getTime();
+
     canvas.render(x_axis);
     canvas.render(y_axis);
     canvas.render(z_axis);
@@ -70,7 +73,7 @@
     canvas.render(bcurve);
     canvas.render(bsurf);
     
-    console.log((new Date().getTime() - start)/1000);
+    console.log("rendering: " + (new Date().getTime() - start)/1000 + "s");
   </script>
 </body>
 </html>
