@@ -42,11 +42,49 @@
     return shape;
   }
 
-  bezier.surface = function surface( controls, step, sp, tp, c, width) {
-    var cloud = Cloud.create(),
-        shape = Shape.create(cloud);
+  bezier.surface = function surface(points, steps_t, steps_s, col, width) {
+    var cloud  = Cloud.create(),
+        shape  = Shape.create(cloud),
+        step_t = 1 / steps_t,
+        step_s = 1 / steps_s,
+        curves = []
 
-    // TODO
+    // initialize cached controlpoints
+    for(var i=0; i<points.length;i++) {
+      curves[i] = [];
+      for(var j=0; j<points[i].length;j++ ) {
+        curves[i].push( [points[i][j].x, points[i][j].y, points[i][j].z] );
+      }
+    }
+
+    // for each step in direction s
+    var i=0;
+    for(var s=0;s<steps_s;s++) {
+      // for each set of cached controlpoints
+      var cps = [];
+      for(var d=0;d<curves.length;d++) {
+        // determine point, which is in its turn a controlpoint
+        controlpoints = curves[d];
+        cache = [];
+        cps.push(bki(3,3,s*step_s));
+      }
+      // use temp controlpoints to define actual points
+      controlpoints = cps;
+      cache = [];
+      for(var t=0;t<steps_t;t++) {
+        var p = bki(3, 3, t*step_t);
+        cloud.add({ x:p[0], y:p[1], z:p[2], color: col, size: width });
+        // add vertex to previous point on this curve
+        if(t>0) {
+          shape.add( {begin:i-1, end:i, color: col, size: width } );
+        }
+        // add vertex to point on previous curve
+        if(s>0) {
+          shape.add( {begin:i, end:i-steps_t, color: col, size: width } );
+        }
+        i++;
+      }
+    }
 
     return shape;
   }
