@@ -1,14 +1,19 @@
 (function(globals) {
 
   var controlpoints = [],
+      cache = {},
+
       bki = function bki(k, i, t) {
               if( k == 0 ) { return controlpoints[i]; }
+              var c;
+              if( c = cache["bki("+k+i+t+")"] ) { return c; }
               var t2   = 1-t,
                   bki1 = bki(k-1, i-1, t),
                   bki2 = bki(k-1, i,   t),
                   bx   = t2 * bki1[0] + t * bki2[0],
                   by   = t2 * bki1[1] + t * bki2[1],
                   bz   = t2 * bki1[2] + t * bki2[2];
+              cache["bki("+k+i+t+")"] = [bx,by,bz];
               return [bx,by,bz];
             },
 
@@ -19,13 +24,13 @@
         shape = Shape.create(cloud),
         step  = 1 / steps;
 
-    controlpoints = [];
-
     // initialize controlpoints
+    controlpoints = [];
     for(var i=0; i<points.length;i++) {
       controlpoints.push( [points[i].x, points[i].y, points[i].z] );
     }
 
+    // calculate intermediate points and add vertices
     for(var t=0;t<=steps;t++) {
       var p = bki(3, 3, t*step);
       cloud.add({ x:p[0], y:p[1], z:p[2], color: col, size: width });
