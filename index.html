@@ -44,11 +44,11 @@
             { x:-50, y: 30, z:200 },
             { x:100, y:100, z:200 },
             { x:300, y:-25, z:200 } ],
-          [ { x: -50, y:  0, z:400 },
-            { x: 10, y: 30, z:400 },
-            { x:100, y:400, z:400 },
-            { x:400, y:-25, z:400 } ]
-          ], 10, 10, "orange", 1 );
+          [ { x:-50, y:  0, z:300 },
+            { x: 10, y: 30, z:300 },
+            { x:100, y:200, z:300 },
+            { x:400, y:-25, z:300 } ]
+          ], 20, 20, "orange", 1 );
 
     cube.applyTranslation( {x:-25, y:0, z:-25} );
     cube.applyRotation( {x:45, y:45, z:45} );
@@ -62,35 +62,35 @@
     // TODO: Projection Perspective needs to be fixed a bit ;-)
     // canvas.setPerspective( Perspective.projection(20) );
 
-    console.log("preparation: " + (new Date().getTime() - start)/1000 + "s");
-    start = new Date().getTime();
+    //console.log("preparation: " + (new Date().getTime() - start)/1000 + "s");
 
     var scene = Shapes.group();
     scene.add(x_axis)
          .add(y_axis)
          .add(z_axis)
-         .add(cube)
          .add(plane)
-         .add(bcurve)
+         .add(cube)
          .add(bsurf);
 
     function render() {
+      start = new Date().getTime();
       canvas.render(scene);
-      // console.log("rendering: " + (new Date().getTime() - start)/1000 + "s");
-      // start = new Date().getTime();
+      //console.log("rendering: " + (new Date().getTime() - start)/1000 + "s");
     }
     
-    function animate(dtx, dty,dtz,drx,dry,drz) {
-      //scene.setTranslation( {x:-1*dtx, y:dty, z:dtz} );
-      scene.setRotation( {x:-1*drx, y:-1*dry, z:0 } );
+    function animate(steps, dtx, dty,dtz,drx,dry,drz) {
+      start = new Date().getTime();      
+      //scene.setTranslation( {x:dtx, y:dty, z:dtz} );
+      scene.setRotation( {x:drx, y:dry, z:drz } );
+      //console.log("transform: " + (new Date().getTime() - start)/1000 + "s");      
       render();
-      if(drx < 360) {
-        setTimeout(function() { animate(0, 0, 0, drx+2, dry+2, drz+2) }, 5 );
+      if(steps > 0) {
+        setTimeout(function() { animate(steps-1, dtx, dty, dtz, drx, dry, drz) }, 25 );
       }
     }
-    
-    animate(0,0,0,0,0,0);
 
+    animate(60, 0, 0, 0, 0, 6, 0);
+    
   </script>
 </body>
 </html>

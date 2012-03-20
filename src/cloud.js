@@ -7,17 +7,22 @@
 
     // privates
     var p = -1, // internal counter for iterator
-        transformations = [],
         
     // exposed object
     cloud = {};
 
+    cloud.clear = function clear() {
+      points = [];
+    }
+
     cloud.add = function add(point) {
       points.push(point);
     }
-
+    
     cloud.applyTransformation = function applyTransformation(transformation) {
-      transformations.push(transformation);
+      for(var p in points) {
+        points[p] = transformation(points[p]);
+      }
     }
 
     cloud.applyTranslation = function applyTranslation(translation) {
@@ -58,9 +63,6 @@
       if(idx >= points.length) { return; }
       var point = { x: points[idx].x, y: points[idx].y, z: points[idx].z,
                     size: points[idx].size, color: points[idx].color };
-      for(var t in transformations) {
-        point = transformations[t](point);
-      }
       return point;
     }
 

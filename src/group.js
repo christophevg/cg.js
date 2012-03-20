@@ -4,8 +4,6 @@
   function construct() {
     // private
     var shapes           = [], 
-        applyTranslation = function translation(item) { return item; },
-        applyRotation    = function rotation(item) { return item; },
         group            = {}, // self reference
         s                = -1; // internal counter for iterating over shapes
 
@@ -14,9 +12,15 @@
       shapes.push(shape);
       return group;
     }
+
+    group.applyTransformation = function applyTransformation(transformation) {
+      for(var s in shapes) {
+        shapes[s].applyTransformation(transformation);
+      }
+    }
     
     group.setTranslation = function setTranslation(translation) {
-      applyTranslation = function applyTranslation(shape) {
+      group.applyTransformation( function applyTranslation(shape) {
         if( typeof shape.x != "undefined" ) {
           return { x     : shape.x + translation.x,
                    y     : shape.y + translation.y,
@@ -33,11 +37,11 @@
                    color : shape.color, 
                    size  : shape.size };
         }
-      };
+      });
     }
 
     group.setRotation = function setRotation(rotation) {
-      applyRotation = function applyRotation(shape) {
+      group.applyTransformation( function applyRotation(shape) {
         if( typeof shape.x != "undefined" ) {
           var point = 
             Transformations.rotateDegs(rotation)
@@ -66,7 +70,7 @@
                    color : shape.color, 
                    size  : shape.size };
         }
-      }
+      });
     }
     
     group.reset = function reset() { 
@@ -83,9 +87,7 @@
         s++;
         shapes[s].reset();
       }
-      var item = shapes[s].getNext();
-      var transformed = applyRotation(applyTranslation(item));
-      return transformed;
+      return shapes[s].getNext();
     }
 
     return group;

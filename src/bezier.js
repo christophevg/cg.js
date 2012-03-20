@@ -1,15 +1,17 @@
 (function(globals) {
 
-  var controlpoints = [],
-      cache = {},
+  var cache = {},
 
-      bki = function bki(k, i, t) {
-              if( k == 0 ) { return controlpoints[i]; }
+      bki = function bki(k, i, t, ps) {
+              if( k == 0 ) {
+                var point = ps.get(i);
+                return [ point.x, point.y, point.z ];
+              }
               var c;
               if( c = cache["bki("+k+i+t+")"] ) { return c; }
               var t2   = 1-t,
-                  bki1 = bki(k-1, i-1, t),
-                  bki2 = bki(k-1, i,   t),
+                  bki1 = bki(k-1, i-1, t, ps),
+                  bki2 = bki(k-1, i,   t, ps),
                   bx   = t2 * bki1[0] + t * bki2[0],
                   by   = t2 * bki1[1] + t * bki2[1],
                   bz   = t2 * bki1[2] + t * bki2[2];
@@ -19,73 +21,125 @@
 
       bezier = globals.Bezier = {};
 
+  // factory method with private scope for private members
   bezier.curve = function curve(points, steps, col, width) {
-    var cloud = Cloud.create(),
-        shape = Shape.create(cloud),
-        step  = 1 / steps;
 
-    // initialize controlpoints
-    controlpoints = [];
-    for(var i=0; i<points.length;i++) {
-      controlpoints.push( [points[i].x, points[i].y, points[i].z] );
+    // privates
+    var controlpoints = Cloud.create(), // the defining control points
+        cloud = Cloud.create(),         // the generated point cloud
+        shape = Shape.create(cloud),    // the shape instance
+        step  = 1 / steps;              // size of 1 step
+
+    // when dealing with points, we provide our controlpoints
+    shape.getPoints = function getPoints() {
+      return controlpoints;
     }
 
-    // calculate intermediate points and add vertices
-    for(var t=0;t<=steps;t++) {
-      var p = bki(3, 3, t*step);
-      cloud.add({ x:p[0], y:p[1], z:p[2], color: col, size: width });
-      if(t>0) {
-        shape.add( {begin:t-1, end:t, color: col, size: width } );
+    // when changes have been made to our (control)points, we need to
+    // regenerate the actual point cloud
+    shape.refresh = function refresh() {
+      cloud.clear();
+      // calculate intermediate points
+      for(var t=0;t<=steps;t++) {
+        var p = bki(3, 3, t*step, controlpoints);
+        cloud.add({ x:p[0], y:p[1], z:p[2], color: col, size: width });
       }
     }
+
+    // initialize controlpoints
+    for(var i=0; i<points.length;i++) {
+      points[i].color = col;
+      points[i].size  = width;
+      controlpoints.add(points[i]);
+    }
+    
+    // initialize the vertices (these don't change when transformed)
+    for(var t=1;t<=steps;t++) {
+      shape.add( {begin:t-1, end:t, color: col, size: width } );
+    }
+    
+    shape.refresh();
 
     return shape;
   }
 
   bezier.surface = function surface(points, steps_t, steps_s, col, width) {
-    var cloud  = Cloud.create(),
-        shape  = Shape.create(cloud),
-        step_t = 1 / steps_t,
-        step_s = 1 / steps_s,
-        curves = []
+    // privates
+    var controlpoints = Cloud.create(),  // the defining control points
+        cloud  = Cloud.create(),         // the generated point cloud
+        shape  = Shape.create(cloud),    // the shape instance
+        step_t = 1 / steps_t,            // size of 1 step in 1 direction 
+        step_s = 1 / steps_s,            // size of 1 step in other direction
+        curves = [],                     // groups of controlpoints
+        cps    = Cloud.create()          // cloud with dynamic controlpoints
 
-    // initialize cached controlpoints
-    for(var i=0; i<points.length;i++) {
-      curves[i] = [];
-      for(var j=0; j<points[i].length;j++ ) {
-        curves[i].push( [points[i][j].x, points[i][j].y, points[i][j].z] );
-      }
+    // when dealing with points, we provide our controlpoints
+    shape.getPoints = function getPoints() {
+      return controlpoints;
     }
 
-    // for each step in direction s
-    var i=0;
-    for(var s=0;s<steps_s;s++) {
-      // for each set of cached controlpoints
-      var cps = [];
-      for(var d=0;d<curves.length;d++) {
-        // determine point, which is in its turn a controlpoint
-        controlpoints = curves[d];
-        cache = [];
-        cps.push(bki(3,3,s*step_s));
+    // when changes have been made to our (control)points, we need to
+    // regenerate the actual point cloud
+    shape.refresh = function refresh() {
+      
+      // initialize cached sets of controlpoints
+      for(var i=0; i<points.length; i++) {
+        curves[i].clear()
+        curves[i].add(controlpoints.get(i));
+        curves[i].add(controlpoints.get(i+4));
+        curves[i].add(controlpoints.get(i+8));
+        curves[i].add(controlpoints.get(i+12));
       }
-      // use temp controlpoints to define actual points
-      controlpoints = cps;
-      cache = [];
-      for(var t=0;t<steps_t;t++) {
-        var p = bki(3, 3, t*step_t);
-        cloud.add({ x:p[0], y:p[1], z:p[2], color: col, size: width });
-        // add vertex to previous point on this curve
+      
+      cloud.clear();
+      // for each step in direction s
+      for(var s=0; s<steps_s; s++) {
+        // create a temp cloud of controlpoints
+        cps.clear();
+        for(var d=0; d<curves.length; d++) {
+          // determine point, which is in its turn a controlpoint
+          cache = {};
+          var p = bki(3, 3, s*step_s, curves[d]);
+          cps.add({ x:p[0], y:p[1], z:p[2], color: col, size: width });
+        }
+        // use temp controlpoints to define actual points
+        for(var t=0; t<steps_t; t++) {
+          cache = {};
+          var p = bki(3, 3, t*step_t, cps);
+          cloud.add({ x:p[0], y:p[1], z:p[2], color: col, size: width });
+        }
+      }
+    }
+    
+    // initialize controlpoints cloud
+    for(var i=0; i<points.length; i++) {
+      for(var j=0; j<points[i].length; j++) {
+        points[i][j].color = col;
+        points[i][j].size  = width;
+        controlpoints.add(points[i][j]);
+      }
+      // prepare a group to store 
+      curves[i] = Cloud.create();
+    }
+    
+    // initialize the vertices (these don't change when transformed)
+    var i=0;
+    for(var s=0; s<steps_s; s++) {
+      for(var t=0; t<steps_t; t++) {
+        // add vertex to previous point on curve
         if(t>0) {
           shape.add( {begin:i-1, end:i, color: col, size: width } );
         }
         // add vertex to point on previous curve
         if(s>0) {
-          shape.add( {begin:i, end:i-steps_t, color: col, size: width } );
+          shape.add( {begin:i, end:i-steps_s, color: col, size: width } );
         }
         i++;
       }
     }
 
+    shape.refresh();
+    
     return shape;
   }
 

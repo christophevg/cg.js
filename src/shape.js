@@ -14,17 +14,38 @@
     shape.add = function add(vertex) {
       vertices.push(vertex);
     }
+    
+    shape.refresh = function refresh() {
+      // by default the we don't need to do anything
+      // some shapes use their cloud to store controlpoints
+      // after applying a transformation to their could, they need to 
+      // recalculate their actual points
+      // they can implement this method and the next to intervene in this
+      // process.
+    }
+    
+    shape.getVertices = function() { return vertices; }
+    
+    shape.getPoints = function getPoints() {
+      // by default we operate on the actual cloud of points
+      // some shapes use this to store their controlpoints and refresh their
+      // points
+      return cloud;
+    }
 
     shape.applyTransformation = function applyTransformation(transformation) {
-      cloud.applyTransformation(transformation);
+      shape.getPoints().applyTransformation(transformation);
+      shape.refresh();
     }
 
     shape.applyTranslation = function applyTranslation(translation) {
-      cloud.applyTranslation(translation);
+      shape.getPoints().applyTranslation(translation);
+      shape.refresh();
     },
 
     shape.applyRotation = function applyRotation(rotation) {
-      cloud.applyRotation(rotation);
+      shape.getPoints().applyRotation(rotation);
+      shape.refresh();
     },
     
     shape.get = function get(idx) {
