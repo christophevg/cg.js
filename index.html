@@ -11,6 +11,7 @@
   <script src="src/shape.js"></script>
   <script src="src/transformations.js"></script>
   <script src="src/shapes.js"></script>
+  <script src="src/group.js"></script>
   <script src="src/plane.js"></script>
   <script src="src/bezier.js"></script>
 </head>
@@ -23,7 +24,7 @@
         x_axis = Shapes.line( {x:-200,y:0,z:0}, {x:200,y:0,z:0}, "grey", 1 ),
         y_axis = Shapes.line( {x:0,y:-200,z:0}, {x:0,y:200,z:0}, "grey", 1 ),
         z_axis = Shapes.line( {x:0,y:0,z:-200}, {x:0,y:0,z:200}, "grey", 1 ),
-        cube   = Shapes.cube( 50, "blue", 2 ),
+        cube   = Shapes.cube( 50, "blue", 1 ),
         plane  = Shapes.plane( 200, 200, 4, 4, "red", 1 ),
         bcurve = Shapes.Bezier.curve( [ { x:-50, y:  0, z:0 },
                                         { x: 10, y: 30, z:0 },
@@ -47,7 +48,7 @@
             { x: 10, y: 30, z:400 },
             { x:100, y:400, z:400 },
             { x:400, y:-25, z:400 } ]
-          ], 20, 40, "yellow", 1 );
+          ], 10, 10, "orange", 1 );
 
     cube.applyTranslation( {x:-25, y:0, z:-25} );
     cube.applyRotation( {x:45, y:45, z:45} );
@@ -64,16 +65,32 @@
     console.log("preparation: " + (new Date().getTime() - start)/1000 + "s");
     start = new Date().getTime();
 
-    canvas.render(x_axis);
-    canvas.render(y_axis);
-    canvas.render(z_axis);
+    var scene = Shapes.group();
+    scene.add(x_axis)
+         .add(y_axis)
+         .add(z_axis)
+         .add(cube)
+         .add(plane)
+         .add(bcurve)
+         .add(bsurf);
+
+    function render() {
+      canvas.render(scene);
+      // console.log("rendering: " + (new Date().getTime() - start)/1000 + "s");
+      // start = new Date().getTime();
+    }
     
-    canvas.render(cube);
-    canvas.render(plane);
-    canvas.render(bcurve);
-    canvas.render(bsurf);
+    function animate(dtx, dty,dtz,drx,dry,drz) {
+      //scene.setTranslation( {x:-1*dtx, y:dty, z:dtz} );
+      scene.setRotation( {x:-1*drx, y:-1*dry, z:0 } );
+      render();
+      if(drx < 360) {
+        setTimeout(function() { animate(0, 0, 0, drx+2, dry+2, drz+2) }, 5 );
+      }
+    }
     
-    console.log("rendering: " + (new Date().getTime() - start)/1000 + "s");
+    animate(0,0,0,0,0,0);
+
   </script>
 </body>
 </html>

@@ -12,8 +12,6 @@
     // exposed object
     cloud = {};
 
-    cloud.type = "point";
-    
     cloud.add = function add(point) {
       points.push(point);
     }

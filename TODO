@@ -1,3 +1,14 @@
+Features to add ...
+- implement mouse movement tracking
+	- implement virtual trackball
+- render control points
+	- make them interactive
+
+Things I should do ...
+- apply transformation to defining points in stead of generated points
+  e.g. 16 control points of Bezier surface versus 800 generate points/vertices
+- change vertex rendering into 
+
 Things I need to do, but are not really critical right now ;-)
 
 - implement support for rendering "crisp" lines

@@ -49,16 +49,21 @@
     canvas.setPerspective = function setPerspective(p) {
       perspective = p;
     }
+    
+    canvas.clear = function clear() {
+      context.fillStyle = "white";
+      context.fillRect(0,0,htmlElement.width,htmlElement.height);
+    }
 
     canvas.render = function render(model) {
       model.reset();
+      canvas.clear();
       while(model.hasNext()) {
         var item = model.getNext();
-        switch(model.type) {
-          case "point" : renderPoint(item);  break;
-          case "vertex": renderVertex(item); break;
-          default:
-            console.log( "unknown rendering type: " + mode.type );
+        if( typeof item.x != "undefined" ) {
+          renderPoint(item);
+        } else {
+          renderVertex(item);
         }
       }
     }

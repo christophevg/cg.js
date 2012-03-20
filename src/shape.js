@@ -11,12 +11,6 @@
     // exposed object
     shape = {};
 
-    shape.type = "vertex";
-
-    shape.size = function size() {
-      return vertices.length;
-    }
-    
     shape.add = function add(vertex) {
       vertices.push(vertex);
     }
@@ -35,9 +29,10 @@
     
     shape.get = function get(idx) {
       if(idx >= vertices.length) { return; }
-      return { begin: cloud.get(vertices[idx].begin), 
-               end:   cloud.get(vertices[idx].end), 
-               color: vertices[idx].color, size: vertices[idx].size };
+      return { begin : cloud.get(vertices[idx].begin), 
+               end   : cloud.get(vertices[idx].end), 
+               color : vertices[idx].color, 
+               size  : vertices[idx].size };
     }
 
     shape.reset = function reset() { 
