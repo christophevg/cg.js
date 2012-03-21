@@ -3,12 +3,17 @@ Features to add ...
 	- implement virtual trackball
 - render control points
 	- make them interactive
+- add support for Splines & NURBS
 
 Things I should do ...
 - change vertex rendering into filled polygon rendering
 - look into used memory, CG seems to kick in regularly ;-)
 
 Things I need to do, but are not really critical right now ;-)
-
 - implement support for rendering "crisp" lines
 - implement everything with arrays, hashes are rather expensive
+- add some HTML to "build"/"inspect" scenes
+
+Things I might do ...
+- add a Sphere Shape
+- hidden line removal
