@@ -9,7 +9,7 @@
 
     htmlElement = document.getElementById(id),
     context     = htmlElement.getContext("2d"),
-    perspective = Perspective.cabinet(5*Math.PI/6, 0.5),
+    perspective = Perspective.cabinet(4*Math.PI/6, 0.3),
 
     // we use a Y-axis pointing up
     // Y ^
