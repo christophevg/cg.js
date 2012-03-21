@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>cg.js</title>
+  <link rel="stylesheet" type="text/css" href="common/cg.css">
+  <script src="src/ajax.js"></script>
+  <script src="src/matrix.js"></script>
+  <script src="src/canvas.js"></script>
+  <script src="src/cloud.js"></script>
+  <script src="src/perspective.js"></script>
+  <script src="src/shape.js"></script>
+  <script src="src/transformations.js"></script>
+  <script src="src/shapes.js"></script>
+  <script src="src/group.js"></script>
+  <script src="src/plane.js"></script>
+  <script src="src/bezier.js"></script>
+</head>
+
+<body>
+  <canvas id="cloud" width="640" height="480"></canvas>
+  <script>
+    var start  = new Date().getTime(),
+        canvas = Canvas.get("cloud"),
+        teapot = Shapes.group(),
+        controlnets = [],
+        patch = -1;
+        curve = 0;
+        source = Ajax.fetch("./teapot.bpt").split("\n");
+        
+    // parse source
+    for(var l in source) {
+      var line = source[l];
+      if( line.charAt(0) == "#" || line == "\n" ) {
+        // skip
+      } else {
+        var point = line.split(" "); 
+        if( point.length == 1 ) {
+          // skip number of patches
+        } else if( point.length == 2 ) {
+          // next patch
+          if(patch>-1) {
+            teapot.add( Shapes.Bezier.surface( controlnets[patch],
+                                               15, 15, "black", 1 ) );
+          }
+          patch++;
+          controlnets[patch] = [];
+          curve = 0;
+          controlnets[patch][curve] = [];
+        } else {
+          if( controlnets[patch][curve].length == 4 ) {
+            curve++;
+            controlnets[patch][curve] = [];
+          }
+          controlnets[patch][curve].push( { x: point[0]*100, y: point[1]*100, z: point[2]*100 } );
+        }
+      }
+    }
+    teapot.add( Shapes.Bezier.surface( controlnets[patch],
+                                       20, 20, "black", 1 ) );
+    
+    console.log("preparation: " + (new Date().getTime() - start)/1000 + "s");
+
+    function animate(steps, dtx, dty,dtz,drx,dry,drz) {
+      start = new Date().getTime();      
+      teapot.setRotation( {x:drx, y:dry, z:drz } );
+      canvas.render(teapot);
+      if(steps > 0) {
+        setTimeout(function() { animate(steps-1, dtx, dty, dtz, drx, dry, drz) }, 25 );
+      }
+    }
+
+    // animate(60, 0, 0, 0, 0, 0, 6);
+
+    start  = new Date().getTime();
+    teapot.setRotation( {x:-90, y:0, z:3 } );
+    teapot.setTranslation( {x:-10, y:-140, z:0 } );
+    console.log("transformation: " + (new Date().getTime() - start)/1000 + "s");
+
+    start  = new Date().getTime();
+    canvas.render(teapot);
+    console.log("rendering: " + (new Date().getTime() - start)/1000 + "s");
+    
+  </script>
+</body>
+</html>
