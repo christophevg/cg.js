@@ -93,7 +93,7 @@
       
       cloud.clear();
       // for each step in direction s
-      for(var s=0; s<steps_s; s++) {
+      for(var s=0; s<=steps_s; s++) {
         // create a temp cloud of controlpoints
         cps.clear();
         for(var d=0; d<curves.length; d++) {
@@ -103,7 +103,7 @@
           cps.add({ x:p[0], y:p[1], z:p[2], color: col, size: width });
         }
         // use temp controlpoints to define actual points
-        for(var t=0; t<steps_t; t++) {
+        for(var t=0; t<=steps_t; t++) {
           cache = {};
           var p = bki(3, 3, t*step_t, cps);
           cloud.add({ x:p[0], y:p[1], z:p[2], color: col, size: width });
@@ -124,15 +124,15 @@
     
     // initialize the vertices (these don't change when transformed)
     var i=0;
-    for(var s=0; s<steps_s; s++) {
-      for(var t=0; t<steps_t; t++) {
+    for(var s=0; s<=steps_s; s++) {
+      for(var t=0; t<=steps_t; t++) {
         // add vertex to previous point on curve
         if(t>0) {
           shape.add( {begin:i-1, end:i, color: col, size: width } );
         }
         // add vertex to point on previous curve
         if(s>0) {
-          shape.add( {begin:i, end:i-steps_s, color: col, size: width } );
+          shape.add( {begin:i, end:i-steps_s-1, color: col, size: width } );
         }
         i++;
       }
